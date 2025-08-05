@@ -4,7 +4,7 @@ __pycache__/
 *.so
 *.log
 *.tmp
-*.swp
+
 
 # 환경설정 파일
 .env
