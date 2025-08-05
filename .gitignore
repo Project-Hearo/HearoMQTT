@@ -1,0 +1,34 @@
+# Python 기본
+__pycache__/
+*.py[cod]
+*.so
+*.log
+*.tmp
+*.swp
+
+# 환경설정 파일
+.env
+.venv/
+venv/
+*.env
+
+# 운영체제 및 에디터별
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# log 파일
+logs/
+*.log
+
+# 테스트 출력
+*.out
+*.bak
+
+# MQTT 관련 (만약 설정 파일 따로 관리한다면)
+config.json
+*.mqtt.cache
+
+# pip freeze나 임시 파일
+pip-log.txt
