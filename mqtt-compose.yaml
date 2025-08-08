@@ -1,0 +1,47 @@
+services:
+  broker:
+    image: eclipse-mosquitto:2
+    container_name: mqtt-broker
+    ports:
+      - "1883:1883"
+      - "9001:9001"   
+    volumes:
+      - ./config/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./data:/mosquitto/data
+      - ./logs:/mosquitto/log
+    restart: unless-stopped
+    # healthcheck:
+    #   test: ["CMD", "mosquitto_sub", "-h", "localhost", "-t", "$SYS/#", "-C", "1", "-W", "5"]
+    #   interval: 15s
+    #   timeout: 5s
+    #   retries: 3
+
+  # 앱 → 로봇 명령(cmd) 수신
+  # 이름 : cmd_handler
+  cmd_handler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: hearo/handler:latest   
+    environment:
+      - BROKER_HOST=broker # MQTT 호스트명
+      - BROKER_PORT=1883 # 브로커 포트. 문자열로 들어가서 앱에서 int로 캐스팅
+      - ROBOT_ID=robot001 #핸들러가 다루는 로봇ID 
+    depends_on: # 기동 순서 힌트
+      - broker  # 의존하는 대상의 이름
+        # condition: service_healthy #브로커 컨테이너의 헬스체크가 통과해야 online_handler를 시작
+    restart: unless-stopped # 컨테이너가 죽거나 도커 데몬이 재시작돼도 자동 재가동
+    command: ["python","-u","mqtt_handler/command_broker.py"] # 컨테이너가 뜰 때 실행할 명령을 기본값 대신 오버라이드
+
+  # 로봇 온라인 상태 수신
+  online_handler:
+    image: hearo/handler:latest   
+    environment:
+      - BROKER_HOST=broker
+      - BROKER_PORT=1883
+      - ROBOT_ID=robot001
+    depends_on:
+      - broker
+        # condition: service_healthy
+    restart: unless-stopped
+    command: ["python","-u","mqtt_handler/online_broker.py"]
