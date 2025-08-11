@@ -1,5 +1,0 @@
-1754396371: mosquitto version 2.0.22 starting
-1754396371: Config loaded from /mosquitto/config/mosquitto.conf.
-1754396371: Opening ipv4 listen socket on port 1883.
-1754396371: Opening websockets listen socket on port 9001.
-1754396371: mosquitto version 2.0.22 running
