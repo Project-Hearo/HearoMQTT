@@ -34,14 +34,13 @@ def _app_resp_topic(subtopic: str, req_id: Optional[str]) -> str:
 
 def on_cmd(client, userdata, msg):
     parts = msg.topic.split('/')
+    subtopic = '/'.join(parts[3:]) if len(parts) >= 4 else ""
     
     if not subtopic:
         client.publish(_app_resp_topic("", req_id),
                        json.dumps({"ok": False, "error": {"code":"bad_topic", "message": msg.topic}}),
                         qos=1)
         
-    subtopic = '/'.join(parts[3:]) if len(parts) >= 4 else ""
-
     try:
         data = json.loads(msg.payload.decode('utf-8'))
     except json.JSONDecodeError as e:

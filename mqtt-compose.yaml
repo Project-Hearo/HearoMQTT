@@ -29,7 +29,7 @@ services:
       - ROBOT_ID=robot001 #핸들러가 다루는 로봇ID 
     depends_on: # 기동 순서 힌트
       - broker  # 의존하는 대상의 이름
-        condition: service_healthy #브로커 컨테이너의 헬스체크가 통과해야 online_handler를 시작
+        # condition: service_healthy #브로커 컨테이너의 헬스체크가 통과해야 online_handler를 시작
     restart: unless-stopped # 컨테이너가 죽거나 도커 데몬이 재시작돼도 자동 재가동
     command: ["python","-u","mqtt_handler/command_broker.py"] # 컨테이너가 뜰 때 실행할 명령을 기본값 대신 오버라이드
 
@@ -42,6 +42,6 @@ services:
       - ROBOT_ID=robot001
     depends_on:
       - broker
-        condition: service_healthy
+        # condition: service_healthy
     restart: unless-stopped
     command: ["python","-u","mqtt_handler/online_broker.py"]
