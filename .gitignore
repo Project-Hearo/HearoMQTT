@@ -32,3 +32,9 @@ config.json
 
 # pip freeze나 임시 파일
 pip-log.txt
+
+#Mosquitto runtime
+/data/
+/logs/
+**/mosquitto.db
+**/*.log
