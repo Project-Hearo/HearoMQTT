@@ -38,3 +38,5 @@ pip-log.txt
 /logs/
 **/mosquitto.db
 **/*.log
+
+*.pem
