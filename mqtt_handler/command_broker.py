@@ -66,14 +66,13 @@ def on_cmd(client: mqtt.Client, userdata, msg: mqtt.MQTTMessage):
         return
 
     req_id = data.get("req_id")
-    args   = data.get("args", {})
     
     if not req_id:
         err = {"ok": False, "error": {"code": "missing_req_id", "message": "req_id required"}}
         client.publish(app_resp_topic(subtopic), json.dumps(err), qos=1)
         return
 
-    ack = {"req_id": req_id, "ok": True, "data": {"state": "accepted"}}
+    ack = {"req_id": req_id, "ok": True, "response": {"state": "accepted"}}
     client.publish(app_resp_topic(subtopic), json.dumps(ack), qos=1)
 
     client.publish(robot_cmd_topic(subtopic), json.dumps(data), qos=1)
@@ -83,7 +82,7 @@ def on_robot_response(client: mqtt.Client, userdata, msg: mqtt.MQTTMessage):
     
     try:
         payload = json.loads(msg.payload.decode("utf-8"))
-        client.publish(app_resp_topic(subtopic), json.dumps(payload), qos=1)
+        client.publish(app_resp_topic(subtopic), json.dumps(payload, separators=(',',':')), qos=1)
     except Exception:
         client.publish(app_resp_topic(subtopic), msg.payload, qos=1)
     
