@@ -17,6 +17,8 @@ TOPIC_CMD = f"{APP_BASE}/cmd/#"
 ROBOT_RESPONSE = f"{ROBOT_BASE}/resp/#"
 TOPIC_ONLINE = f"{APP_BASE}/status/online"
 
+COMMAND_HANDLER = f"command_handler/status"
+
 
 def robot_cmd_topic(subtopic: str) -> str:
     return f"{ROBOT_BASE}/cmd/{subtopic}" if subtopic else f"{ROBOT_BASE}/cmd"
@@ -28,7 +30,7 @@ def app_resp_topic(subtopic: str) -> str:
 def on_connect(client, userdata, flags, rc):
     if rc == 0:
         print("MQTT 연결 성공, 구독/상태 갱신 수행")
-        client.publish(TOPIC_ONLINE, json.dumps({"online": True}), qos=1, retain=True)
+        client.publish(COMMAND_HANDLER, json.dumps({"online": True}), qos=1, retain=True)
         client.subscribe(TOPIC_CMD, qos=1)
         client.subscribe(ROBOT_RESPONSE, qos=1)
         client.message_callback_add(TOPIC_CMD, on_cmd)
